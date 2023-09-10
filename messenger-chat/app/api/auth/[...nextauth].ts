@@ -1,10 +1,13 @@
 /** @format */
 
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
+import User from "../../lib/userSchema";
+import bcrypt from "bcryptjs";
 
-export default NextAuth({
+const options: AuthOptions = {
   // Configure one or more authentication providers
   providers: [
     GoogleProvider({
@@ -15,6 +18,46 @@ export default NextAuth({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
-    // ...add more providers here
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+        },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Invalid Credentials");
+        }
+        const user = User.findOne({
+          email: credentials.email,
+        });
+
+        if (!user || user?.password) {
+          throw new Error("Invalid Credentials");
+        }
+
+        const isCorrectPassword = await bcrypt.compare(
+          credentials?.password,
+          user?.password
+        );
+        if (!isCorrectPassword) {
+          throw new Error("Invalid Credentials");
+        }
+
+        return user;
+      },
+    }),
   ],
-});
+  debug: process.env.NODE_ENV === "development",
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.JWT_SECRET as string,
+};
+export default NextAuth(options);
