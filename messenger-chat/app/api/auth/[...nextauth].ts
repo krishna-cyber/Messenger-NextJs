@@ -5,7 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "../../lib/userSchema";
-import bcrypt from "bcryptjs";
+const bcrypt = require("bcryptjs");
 
 const options: AuthOptions = {
   // Configure one or more authentication providers
