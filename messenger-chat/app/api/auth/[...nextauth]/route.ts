@@ -4,7 +4,7 @@ import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import User from "../../lib/userSchema";
+import User from "../../../lib/userSchema";
 const bcrypt = require("bcryptjs");
 
 const options: AuthOptions = {
@@ -60,4 +60,6 @@ const options: AuthOptions = {
   },
   secret: process.env.JWT_SECRET as string,
 };
-export default NextAuth(options);
+const handler = NextAuth(options);
+
+export { handler as GET, handler as POST };
