@@ -33,6 +33,17 @@ const AuthForm = () => {
         <form>
           <VStack>
             {" "}
+            {variant === "REGISTER" ? (
+              <FormControl isRequired>
+                <FormLabel>Username</FormLabel>
+                <Input
+                  placeholder='Username'
+                  type='text'
+                  name='username'
+                  id='username'
+                />
+              </FormControl>
+            ) : null}
             <FormControl isRequired>
               <FormLabel>Email</FormLabel>
               <Input
