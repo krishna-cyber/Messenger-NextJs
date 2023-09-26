@@ -19,10 +19,14 @@ import {
 } from "@chakra-ui/react";
 import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
+type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
+  const [variant, setVariant] = useState<Variant>("LOGIN");
+  // if (variant === "REGISTER")
   return (
     <Card className=' w-[40%] mt-2'>
       <CardBody>
@@ -47,9 +51,31 @@ const AuthForm = () => {
                 id='email'
               />
             </FormControl>
-            <Button width={"full"} colorScheme='blue'>
-              Sign in
-            </Button>
+            {variant === "REGISTER" ? (
+              <FormControl isRequired>
+                <FormLabel>Confirm Password</FormLabel>
+                <Input
+                  placeholder='******'
+                  type='password'
+                  name='Cpassword'
+                  id='Cpassword'
+                />
+              </FormControl>
+            ) : null}
+            {variant === "REGISTER" ? (
+              <Button width={"full"} colorScheme='blue'>
+                Sign up
+              </Button>
+            ) : (
+              <Button width={"full"} colorScheme='blue'>
+                Sign In
+              </Button>
+            )}
+            {/* {
+              <Button width={"full"} colorScheme='blue'>
+                Sign in
+              </Button>
+            } */}
             <Box position='relative' padding='10' width={"full"}>
               <Divider borderWidth={"2px"} />
               <AbsoluteCenter bg={"white"} px='4'>
@@ -71,14 +97,39 @@ const AuthForm = () => {
                 </Button>
               </Card>
             </HStack>
-            <Text>
-              <span className=' mr-3'>New to messenger?</span>
-              <Link href='/signup'>
-                <Button colorScheme='blue' variant={"link"}>
+            {variant === "LOGIN" ? (
+              <Text>
+                <span className=' mr-3'>New to messenger?</span>
+
+                <Button
+                  colorScheme='blue'
+                  onClick={() => setVariant("REGISTER")}
+                  variant={"link"}>
                   Create new account.
                 </Button>
-              </Link>
-            </Text>{" "}
+              </Text>
+            ) : (
+              <Text>
+                <span className=' mr-3'>Already Have an account?</span>
+
+                <Button
+                  colorScheme='blue'
+                  onClick={() => setVariant("LOGIN")}
+                  variant={"link"}>
+                  Sign in
+                </Button>
+              </Text>
+            )}
+            {/* <Text>
+              <span className=' mr-3'>New to messenger?</span>
+
+              <Button
+                colorScheme='blue'
+                onClick={() => setVariant("REGISTER")}
+                variant={"link"}>
+                Create new account.
+              </Button>
+            </Text>{" "} */}
           </VStack>
         </form>
       </CardBody>

@@ -2,9 +2,11 @@
 
 import User from "@/app/lib/userSchema";
 import { NextResponse } from "next/server";
+import connectDB from "../../lib/db";
 
 export async function POST(req: Request, res: Response) {
   try {
+    await connectDB();
     const body = await req.json();
     const { email, name, password } = body;
 

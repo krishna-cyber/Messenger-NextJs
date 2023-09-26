@@ -2,7 +2,7 @@
 
 const mongoose = require("mongoose");
 
-// create a connecton
+// create a connection
 const connection = {};
 
 //Define a function to connect to the database
@@ -16,6 +16,7 @@ async function connectDB() {
     useUnifiedTopology: true,
     useCreateIndex: true,
   });
+  console.log("Connected to database");
 
   //set the connection isConnected to true
   connection.isConnected = db.connections[0].readyState;
