@@ -4,7 +4,9 @@ import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import User from "../../../lib/userSchema";
+import User from "@/lib/userSchema";
+import connectDB from "@/lib/db";
+import { Console } from "console";
 const bcrypt = require("bcryptjs");
 
 const options: AuthOptions = {
@@ -31,26 +33,32 @@ const options: AuthOptions = {
         },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid Credentials");
-        }
-        const user = User.findOne({
-          email: credentials.email,
-        });
+        try {
+          await connectDB();
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("Invalid Credentials");
+          }
 
-        if (!user || user?.password) {
-          throw new Error("Invalid Credentials");
-        }
+          const user = User.findOne({
+            email: credentials.email,
+          });
 
-        const isCorrectPassword = await bcrypt.compare(
-          credentials?.password,
-          user?.password
-        );
-        if (!isCorrectPassword) {
-          throw new Error("Invalid Credentials");
-        }
+          if (!user || user?.password) {
+            throw new Error("Invalid Credentials");
+          }
 
-        return user;
+          const isCorrectPassword = await bcrypt.compare(
+            credentials?.password,
+            user?.password
+          );
+          if (!isCorrectPassword) {
+            throw new Error("Invalid Credentials");
+          }
+
+          return user;
+        } catch (error) {
+          console.log(error);
+        }
       },
     }),
   ],

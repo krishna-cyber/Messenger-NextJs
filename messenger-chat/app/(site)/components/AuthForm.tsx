@@ -26,7 +26,14 @@ type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>("LOGIN");
-  // if (variant === "REGISTER")
+  //user registration with next-auth
+  if (variant === "REGISTER") {
+    axios.post("/api/auth/signup", {
+      username: "test",
+      email: "",
+      password: "",
+    });
+  }
   return (
     <Card className=' w-[40%] mt-2'>
       <CardBody>
