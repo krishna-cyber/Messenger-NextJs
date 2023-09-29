@@ -14,6 +14,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     email: {
       type: String,
@@ -21,7 +22,6 @@ const userSchema = new Schema(
     },
     avatar: {
       type: String,
-      required: true,
     },
     contacts: [
       {
@@ -35,18 +35,28 @@ const userSchema = new Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
-
-//hashing password
-
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", function (next) {
   const user = this;
+  const saltRounds = Number(process.env.SALT);
 
-  if (user.isModified("password")) {
-    user.password = await bcrypt.hash(user.password, 10);
+  if (this.isModified("password") || this.isNew) {
+    bcrypt.genSalt(saltRounds, function (saltError, saltRounds) {
+      if (saltError) {
+        return next(saltError);
+      } else {
+        bcrypt.hash(user.password, saltRounds, function (hashError, hash) {
+          if (hashError) {
+            return next(hashError);
+          }
+          user.password = hash;
+          next();
+        });
+      }
+    });
+  } else {
+    return next();
   }
-
-  next();
 });
 
+const User = mongoose.model("User", userSchema);
 module.exports = User;

@@ -5,8 +5,10 @@ const express = require("express");
 const router = express.Router();
 
 //importing register controller
-const registerController = require("./controller");
+const { registerUser } = require("./controllers/register/registerController");
 
 //registering user
 
-router.post("/register", registerController.registerUser);
+router.post("/register", registerUser);
+
+module.exports = router;
