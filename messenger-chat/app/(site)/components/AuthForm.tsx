@@ -18,6 +18,14 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type Inputs = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -27,17 +35,24 @@ type Variant = "LOGIN" | "REGISTER";
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>("LOGIN");
   //user registration with next-auth
-  if (variant === "REGISTER") {
-    axios.post("/api/auth/signup", {
-      username: "test",
-      email: "",
-      password: "",
-    });
-  }
+  // if (variant === "REGISTER") {
+  //   axios.post("http://localhost:5000/api/register", {
+  //     username: "test",
+  //     email: "",
+  //     password: "",
+  //   });
+  // }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
   return (
     <Card className=' w-[40%] mt-2'>
       <CardBody>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <VStack>
             {" "}
             {variant === "REGISTER" ? (
@@ -45,10 +60,20 @@ const AuthForm = () => {
                 <FormLabel>Username</FormLabel>
                 <Input
                   placeholder='Username'
-                  type='text'
-                  name='username'
-                  id='username'
+                  {...register("username", {
+                    required: {
+                      value: true,
+                      message: "Username is required",
+                    },
+                    minLength: {
+                      value: 4,
+                      message: "Minimum length should be 4",
+                    },
+                  })}
                 />
+                <FormErrorMessage>
+                  {errors.username && errors.username.message}
+                </FormErrorMessage>
               </FormControl>
             ) : null}
             <FormControl isRequired>
@@ -56,18 +81,46 @@ const AuthForm = () => {
               <Input
                 placeholder='someone@example.com'
                 type='email'
-                name='email'
-                id='email'
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "Email is required",
+                  },
+                  pattern: {
+                    value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                    message: "Invalid email address",
+                  },
+                })}
               />
+              <FormErrorMessage>
+                {errors.email && errors.email.message}
+              </FormErrorMessage>
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Password</FormLabel>
               <Input
                 placeholder='******'
                 type='password'
-                name='email'
-                id='email'
+                {...register("password", {
+                  required: {
+                    value: true,
+                    message: "Password is required",
+                  },
+                  minLength: {
+                    value: 6,
+                    message: "Minimum length should be 6",
+                  },
+                  pattern: {
+                    value:
+                      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+                    message:
+                      "Password must contain at least one uppercase letter, one lowercase letter and one number",
+                  },
+                })}
               />
+              <FormErrorMessage>
+                {errors.password && errors.password.message}
+              </FormErrorMessage>
             </FormControl>
             {variant === "REGISTER" ? (
               <FormControl isRequired>
@@ -75,25 +128,34 @@ const AuthForm = () => {
                 <Input
                   placeholder='******'
                   type='password'
-                  name='Cpassword'
-                  id='Cpassword'
+                  {...register("confirmPassword", {
+                    required: {
+                      value: true,
+                      message: "Password is required",
+                    },
+                    validate: (value: string) => {
+                      if (watch("password") != value) {
+                        return "Your passwords do no match";
+                      }
+                    },
+                  })}
                 />
+                <FormErrorMessage>
+                  <p>
+                    {errors.confirmPassword && errors.confirmPassword.message}
+                  </p>
+                </FormErrorMessage>
               </FormControl>
             ) : null}
             {variant === "REGISTER" ? (
-              <Button width={"full"} colorScheme='blue'>
+              <Button width={"full"} type={"submit"} colorScheme='blue'>
                 Sign up
               </Button>
             ) : (
-              <Button width={"full"} colorScheme='blue'>
+              <Button width={"full"} type={"submit"} colorScheme='blue'>
                 Sign In
               </Button>
             )}
-            {/* {
-              <Button width={"full"} colorScheme='blue'>
-                Sign in
-              </Button>
-            } */}
             <Box position='relative' padding='10' width={"full"}>
               <Divider borderWidth={"2px"} />
               <AbsoluteCenter bg={"white"} px='4'>

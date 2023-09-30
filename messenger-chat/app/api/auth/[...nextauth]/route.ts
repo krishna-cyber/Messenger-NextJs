@@ -6,7 +6,6 @@ import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/lib/userSchema";
 import connectDB from "@/lib/db";
-import { Console } from "console";
 const bcrypt = require("bcryptjs");
 
 const options: AuthOptions = {
