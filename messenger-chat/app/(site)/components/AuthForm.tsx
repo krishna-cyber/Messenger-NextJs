@@ -42,11 +42,11 @@ const AuthForm = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { errors, isSubmitting },
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     delete data.confirmPassword;
-    //make promise based toast using chakra ui
+
     axios
       .post(`http://localhost:5000/api/${variant.toLowerCase()}`, data)
       .then((res) => {
@@ -69,6 +69,7 @@ const AuthForm = () => {
         });
       });
   };
+  console.log(isSubmitting);
   return (
     <Card className=' w-[40%] mt-2'>
       <CardBody>
@@ -174,6 +175,7 @@ const AuthForm = () => {
                 width={"full"}
                 type={"submit"}
                 isLoading={isSubmitting}
+                loadingText={"User registration in progress"}
                 colorScheme='blue'>
                 Sign up
               </Button>
@@ -182,6 +184,7 @@ const AuthForm = () => {
                 width={"full"}
                 type={"submit"}
                 isLoading={isSubmitting}
+                loadingText={"Submitting"}
                 colorScheme='blue'>
                 Sign In
               </Button>
@@ -230,16 +233,6 @@ const AuthForm = () => {
                 </Button>
               </Text>
             )}
-            {/* <Text>
-              <span className=' mr-3'>New to messenger?</span>
-
-              <Button
-                colorScheme='blue'
-                onClick={() => setVariant("REGISTER")}
-                variant={"link"}>
-                Create new account.
-              </Button>
-            </Text>{" "} */}
           </VStack>
         </form>
       </CardBody>
