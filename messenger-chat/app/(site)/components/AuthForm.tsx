@@ -46,7 +46,7 @@ const AuthForm = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
   return (
@@ -56,7 +56,7 @@ const AuthForm = () => {
           <VStack>
             {" "}
             {variant === "REGISTER" ? (
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={errors.username}>
                 <FormLabel>Username</FormLabel>
                 <Input
                   placeholder='Username'
@@ -76,7 +76,7 @@ const AuthForm = () => {
                 </FormErrorMessage>
               </FormControl>
             ) : null}
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={errors.email}>
               <FormLabel>Email</FormLabel>
               <Input
                 placeholder='someone@example.com'
@@ -96,7 +96,7 @@ const AuthForm = () => {
                 {errors.email && errors.email.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={errors.password}>
               <FormLabel>Password</FormLabel>
               <Input
                 placeholder='******'
@@ -123,7 +123,7 @@ const AuthForm = () => {
               </FormErrorMessage>
             </FormControl>
             {variant === "REGISTER" ? (
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={errors.confirmPassword}>
                 <FormLabel>Confirm Password</FormLabel>
                 <Input
                   placeholder='******'
