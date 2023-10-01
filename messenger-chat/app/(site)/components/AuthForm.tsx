@@ -8,6 +8,7 @@ import {
   Input,
   Button,
   VStack,
+  useToast,
   Divider,
   Box,
   AbsoluteCenter,
@@ -24,31 +25,50 @@ type Inputs = {
   username: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
 };
 
 import React, { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { toast } from "react-toastify";
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
+  const toast = useToast();
   const [variant, setVariant] = useState<Variant>("LOGIN");
-  //user registration with next-auth
-  // if (variant === "REGISTER") {
-  //   axios.post("http://localhost:5000/api/register", {
-  //     username: "test",
-  //     email: "",
-  //     password: "",
-  //   });
-  // }
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    delete data.confirmPassword;
+    //make promise based toast using chakra ui
+    axios
+      .post(`http://localhost:5000/api/${variant.toLowerCase()}`, data)
+      .then((res) => {
+        toast({
+          title: `${res.data.message}`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        toast({
+          title: `${err.response.data.message}`,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      });
+  };
   return (
     <Card className=' w-[40%] mt-2'>
       <CardBody>
@@ -134,8 +154,10 @@ const AuthForm = () => {
                       message: "Password is required",
                     },
                     validate: (value: string) => {
-                      if (watch("password") != value) {
-                        return "Your passwords do no match";
+                      if (value === watch("password")) {
+                        return true;
+                      } else {
+                        return "Passwords do not match";
                       }
                     },
                   })}
@@ -148,11 +170,19 @@ const AuthForm = () => {
               </FormControl>
             ) : null}
             {variant === "REGISTER" ? (
-              <Button width={"full"} type={"submit"} colorScheme='blue'>
+              <Button
+                width={"full"}
+                type={"submit"}
+                isLoading={isSubmitting}
+                colorScheme='blue'>
                 Sign up
               </Button>
             ) : (
-              <Button width={"full"} type={"submit"} colorScheme='blue'>
+              <Button
+                width={"full"}
+                type={"submit"}
+                isLoading={isSubmitting}
+                colorScheme='blue'>
                 Sign In
               </Button>
             )}

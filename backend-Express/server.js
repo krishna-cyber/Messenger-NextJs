@@ -1,6 +1,8 @@
 /** @format */
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
+var morgan = require("morgan");
 
 //importing routes
 const router = require("./api/routes");
@@ -11,6 +13,8 @@ const dbConnection = require("./db/dbConnect");
 //creating server instance
 const app = express();
 
+app.use(cors());
+app.use(morgan("tiny"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", router);
