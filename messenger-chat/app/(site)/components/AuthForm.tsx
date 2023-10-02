@@ -29,9 +29,7 @@ type Inputs = {
 };
 
 import React, { useState } from "react";
-import Link from "next/link";
 import axios from "axios";
-import { toast } from "react-toastify";
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
@@ -44,7 +42,7 @@ const AuthForm = () => {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     delete data.confirmPassword;
 
     axios
