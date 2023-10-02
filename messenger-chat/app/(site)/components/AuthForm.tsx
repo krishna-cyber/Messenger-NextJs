@@ -45,7 +45,7 @@ const AuthForm = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     delete data.confirmPassword;
 
-    axios
+    await axios
       .post(`http://localhost:5000/api/${variant.toLowerCase()}`, data)
       .then((res) => {
         toast({
