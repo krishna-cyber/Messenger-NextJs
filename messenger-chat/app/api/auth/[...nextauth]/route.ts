@@ -5,6 +5,7 @@ import NextAuth from "next-auth";
 import credentials from "next-auth/providers/credentials";
 import google from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import axios from "axios";
 
 const handler = NextAuth({
   providers: [
@@ -12,18 +13,19 @@ const handler = NextAuth({
       // The name to display on the sign-in form (e.g., 'Sign in with...')
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
+        email: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials: any) => {
-        // Add your custom authentication logic here.
-        // For example, check the credentials against a database.
-        const { username, password } = credentials;
-        const user = { id: 1, name: "Example User" };
-        if (user) {
-          return Promise.resolve(user);
+        const { email, password } = credentials;
+        const user = await axios.post("http://localhost:5000/api/getUser", {
+          email: credentials.email,
+        });
+
+        if (user.data) {
+          return user.data;
         } else {
-          return Promise.resolve(null);
+          return null;
         }
       },
     }),

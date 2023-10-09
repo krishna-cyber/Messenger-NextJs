@@ -1,6 +1,6 @@
 /** @format */
 "use client";
-import { Card, CardBody, Container, Heading } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import AuthForm from "./components/AuthForm";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

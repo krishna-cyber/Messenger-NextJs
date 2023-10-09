@@ -11,4 +11,9 @@ const { registerUser } = require("./controllers/register/registerController");
 
 router.post("/register", registerUser);
 
+//get user information
+router.post("/getUser", (req, res) => {
+  res.send("user information");
+});
+
 module.exports = router;

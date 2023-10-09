@@ -12,7 +12,6 @@ import {
   Divider,
   Box,
   AbsoluteCenter,
-  useColorMode,
   Card,
   CardBody,
   Text,
@@ -31,8 +30,6 @@ type Inputs = {
 
 import React, { useState } from "react";
 import axios from "axios";
-import { sign } from "crypto";
-import { redirect } from "next/dist/server/api-utils";
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
@@ -52,12 +49,20 @@ const AuthForm = () => {
       await axios
         .post(`http://localhost:5000/api/${variant.toLowerCase()}`, data)
         .then((res) => {
-          toast({
-            title: `${res.data.message}`,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-            position: "top-right",
+          signIn("credentials", {
+            email: data.email,
+            password: data.password,
+            redirect: false,
+          }).then((callback) => {
+            console.log(res);
+            console.log(`login successful`);
+            toast({
+              title: `${res.data.message}`,
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right",
+            });
           });
         })
         .catch((err) => {
@@ -84,7 +89,6 @@ const AuthForm = () => {
       });
     }
   };
-  console.log(isSubmitting);
   return (
     <Card className=' w-[40%] mt-2'>
       <CardBody>
@@ -225,8 +229,14 @@ const AuthForm = () => {
               </Card>{" "}
               <Card shadow={"md"} className=' w-1/3'>
                 <Button
-                  onClick={() => {
-                    signIn("google");
+                  onClick={async () => {
+                    await signIn("google")
+                      .then((callback) => {
+                        console.log(callback);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
                   }}>
                   {" "}
                   <AiFillGoogleCircle className='text-2xl' />
