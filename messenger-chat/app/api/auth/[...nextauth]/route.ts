@@ -1,72 +1,49 @@
 /** @format */
 
-import NextAuth, { AuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import GithubProvider from "next-auth/providers/github";
-import CredentialsProvider from "next-auth/providers/credentials";
-import User from "@/lib/userSchema";
-import connectDB from "@/lib/db";
-const bcrypt = require("bcryptjs");
+// auth/[...nextauth].js
+import NextAuth from "next-auth";
+import credentials from "next-auth/providers/credentials";
+import google from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 
-const options: AuthOptions = {
-  // Configure one or more authentication providers
+const handler = NextAuth({
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
-    }),
-    CredentialsProvider({
+    credentials({
+      // The name to display on the sign-in form (e.g., 'Sign in with...')
       name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-        },
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        try {
-          await connectDB();
-          if (!credentials?.email || !credentials?.password) {
-            throw new Error("Invalid Credentials");
-          }
-
-          const user = User.findOne({
-            email: credentials.email,
-          });
-
-          if (!user || user?.password) {
-            throw new Error("Invalid Credentials");
-          }
-
-          const isCorrectPassword = await bcrypt.compare(
-            credentials?.password,
-            user?.password
-          );
-          if (!isCorrectPassword) {
-            throw new Error("Invalid Credentials");
-          }
-
-          return user;
-        } catch (error) {
-          console.log(error);
+      authorize: async (credentials: any) => {
+        // Add your custom authentication logic here.
+        // For example, check the credentials against a database.
+        const { username, password } = credentials;
+        const user = { id: 1, name: "Example User" };
+        if (user) {
+          return Promise.resolve(user);
+        } else {
+          return Promise.resolve(null);
         }
       },
     }),
+    google({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+    }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
   ],
-  debug: process.env.NODE_ENV === "development",
+
   session: {
+    // Configure your session options here.
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  secret: process.env.JWT_SECRET as string,
-};
-const handler = NextAuth(options);
+  secret: process.env.JWT_SECRET,
+  // Add other global options here as needed.
+});
 
 export { handler as GET, handler as POST };

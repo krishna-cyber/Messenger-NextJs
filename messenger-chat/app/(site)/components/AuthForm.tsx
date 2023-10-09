@@ -19,6 +19,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type Inputs = {
@@ -30,6 +31,8 @@ type Inputs = {
 
 import React, { useState } from "react";
 import axios from "axios";
+import { sign } from "crypto";
+import { redirect } from "next/dist/server/api-utils";
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
@@ -44,28 +47,42 @@ const AuthForm = () => {
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     delete data.confirmPassword;
+    //Registration page
+    if (variant === "REGISTER") {
+      await axios
+        .post(`http://localhost:5000/api/${variant.toLowerCase()}`, data)
+        .then((res) => {
+          toast({
+            title: `${res.data.message}`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+        })
+        .catch((err) => {
+          console.log(err.response.data.message);
+          toast({
+            title: `${err.response.data.message}`,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+        });
+    }
 
-    await axios
-      .post(`http://localhost:5000/api/${variant.toLowerCase()}`, data)
-      .then((res) => {
-        toast({
-          title: `${res.data.message}`,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          position: "top-right",
-        });
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-        toast({
-          title: `${err.response.data.message}`,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "top-right",
-        });
+    //for login page
+    if (variant === "LOGIN") {
+      signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      }).then((res) => {
+        console.log(res);
+        console.log(`login successful`);
       });
+    }
   };
   console.log(isSubmitting);
   return (
@@ -75,6 +92,7 @@ const AuthForm = () => {
           <VStack>
             {" "}
             {variant === "REGISTER" ? (
+              //@ts-ignore
               <FormControl isRequired isInvalid={errors.username}>
                 <FormLabel>Username</FormLabel>
                 <Input
@@ -197,12 +215,21 @@ const AuthForm = () => {
               alignContent={"center"}
               className=' w-full flex justify-center'>
               <Card shadow={"md"} className=' w-1/3'>
-                <Button colorScheme='blue'>
+                <Button
+                  colorScheme='blue'
+                  onClick={() => {
+                    signIn("github").then((res) => {
+                      redirect("/chat");
+                    });
+                  }}>
                   <AiFillGithub className='text-2xl' />
                 </Button>
               </Card>{" "}
               <Card shadow={"md"} className=' w-1/3'>
-                <Button>
+                <Button
+                  onClick={() => {
+                    signIn("google");
+                  }}>
                   {" "}
                   <AiFillGoogleCircle className='text-2xl' />
                 </Button>
