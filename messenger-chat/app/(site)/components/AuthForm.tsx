@@ -218,9 +218,7 @@ const AuthForm = () => {
                 <Button
                   colorScheme='blue'
                   onClick={() => {
-                    signIn("github").then((res) => {
-                      redirect("/chat");
-                    });
+                    signIn("github");
                   }}>
                   <AiFillGithub className='text-2xl' />
                 </Button>
