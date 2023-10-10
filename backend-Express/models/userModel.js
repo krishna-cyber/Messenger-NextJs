@@ -14,7 +14,6 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
-      select: false,
     },
     email: {
       type: String,
@@ -57,6 +56,11 @@ userSchema.pre("save", function (next) {
     return next();
   }
 });
+
+//match password method for login
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

@@ -11,11 +11,11 @@ const ChatPage = () => {
       redirect("/");
     },
   });
-  console.log(session);
+  console.log(session?.user);
   return (
     <div>
       <h1>Chat Page</h1>
-      <p>logged in as {session?.user?.name}</p>
+      <p>logged in as {session?.user?.username}</p>
 
       <Button
         onClick={() => {

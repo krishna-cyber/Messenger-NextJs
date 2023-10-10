@@ -2,31 +2,31 @@
 
 // auth/[...nextauth].js
 import NextAuth from "next-auth";
-import credentials from "next-auth/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials";
 import google from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
-import axios from "axios";
 
 const handler = NextAuth({
   providers: [
-    credentials({
-      // The name to display on the sign-in form (e.g., 'Sign in with...')
-      name: "Credentials",
-      credentials: {
-        email: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials: any, req) {
-        const { email, password } = credentials;
-        const response = await axios.post("http://localhost:5000/api/getuser", {
-          email,
-        });
-
-        console.log(response.data.user);
-        if (response.data.user) {
-          return response.data.user;
+    CredentialsProvider({
+      type: "credentials",
+      credentials: {},
+      async authorize(credentials) {
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
+        // Add logic here to look up the user from the credentials supplied
+        const user = { id: 1, name: "J Smith", email: "something@gmail.com" };
+        if (user) {
+          // Any object returned will be saved in `user` property of the JWT
+          return user;
         } else {
+          // If you return null or false then the credentials will be rejected
           return null;
+          // You can also Reject this callback with an Error or with a URL:
+          // throw new Error('error message') // Redirect to error page
+          // throw '/path/to/redirect'        // Redirect to a URL
         }
       },
     }),
