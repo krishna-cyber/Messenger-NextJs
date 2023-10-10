@@ -16,14 +16,15 @@ const handler = NextAuth({
         email: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials: any) => {
+      async authorize(credentials: any, req) {
         const { email, password } = credentials;
-        const user = await axios.post("http://localhost:5000/api/getUser", {
-          email: credentials.email,
+        const response = await axios.post("http://localhost:5000/api/getuser", {
+          email,
         });
 
-        if (user.data) {
-          return user.data;
+        console.log(response.data.user);
+        if (response.data.user) {
+          return response.data.user;
         } else {
           return null;
         }

@@ -20,7 +20,7 @@ import {
 import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-
+import { useRouter } from "next/navigation";
 type Inputs = {
   username: string;
   email: string;
@@ -33,6 +33,7 @@ import axios from "axios";
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
+  const router = useRouter();
   const toast = useToast();
   const [variant, setVariant] = useState<Variant>("LOGIN");
 
@@ -83,9 +84,12 @@ const AuthForm = () => {
         email: data.email,
         password: data.password,
         redirect: false,
-      }).then((res) => {
-        console.log(res);
-        console.log(`login successful`);
+      }).then(({ ok, error }) => {
+        if (ok) {
+          router.push("/chat");
+        } else {
+          console.log(error);
+        }
       });
     }
   };
