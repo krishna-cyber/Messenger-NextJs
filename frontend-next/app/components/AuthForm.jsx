@@ -15,10 +15,13 @@ import {
   VStack,
   HStack,
 } from "@chakra-ui/react";
+
 import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
+import { sign } from "crypto";
+import { signIn } from "next-auth/react";
 
 const AuthForm = () => {
   const [variant, setVariant] = useState("register");
@@ -31,36 +34,52 @@ const AuthForm = () => {
     formState: { errors, isSubmitting },
   } = useForm();
   const formSubmit = ({ username, email, password }) => {
-    axios
-      .post(`http://localhost:5000/api/${variant}`, {
-        username,
-        email,
-        password,
-      })
-      .then((res) => {
-        if (res.status === 200) {
+    //registration and login using next auth
+    if (variant === "register") {
+      axios
+        .post(`http://localhost:5000/api/${variant}`, {
+          username,
+          email,
+          password,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            toast({
+              title: `Success`,
+              description: `${res.data.message}`,
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+          //if something goes wrong
+          else {
+            toast({
+              title: `Something went wrong`,
+              description: `Please try again later`,
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
           toast({
-            title: `Success`,
-            description: `${res.data.message}`,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-        //if something goes wrong
-        else {
-          toast({
-            title: `Something went wrong`,
-            description: `Please try again later`,
+            title: err.response.data.message,
+            description: `Provided email has already registered user.`,
             status: "error",
             duration: 3000,
             isClosable: true,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+            position: "top-right",
+          }); //toast error
+        });
+    } else {
+      signIn("credentials", {
+        email,
+        password,
       });
+    }
   };
   return (
     <Card width={"40%"}>
