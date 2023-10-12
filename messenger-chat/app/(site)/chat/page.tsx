@@ -15,7 +15,8 @@ const ChatPage = () => {
   return (
     <div>
       <h1>Chat Page</h1>
-      <p>logged in as {session?.user?.username}</p>
+      <p>logged in as {session?.user?.name}</p>
+      <p> address of the user is {session?.user.address}</p>
 
       <Button
         onClick={() => {

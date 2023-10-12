@@ -11,14 +11,20 @@ const handler = NextAuth({
     CredentialsProvider({
       type: "credentials",
       credentials: {},
-      async authorize(credentials) {
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
+      async authorize(credentials, req) {
+        const { email, password } = credentials;
         // Add logic here to look up the user from the credentials supplied
-        const user = { id: 1, name: "J Smith", email: "something@gmail.com" };
+        const user = {
+          id: 145637,
+          name: "J Smith",
+          email: email,
+          image: "https://via.placeholder.com/150",
+          address: "New York",
+          password: password,
+        };
+
         if (user) {
+          console.log(`authorize`, { user });
           // Any object returned will be saved in `user` property of the JWT
           return user;
         } else {
@@ -39,6 +45,20 @@ const handler = NextAuth({
       clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
+  callbacks: {
+    async session({ session, token, user }) {
+      session.accessToken = token.accessToken;
+      session.user = token.user;
+      return session;
+    },
+    async jwt({ token, user, account, profile, isNewUser }) {
+      if (user) {
+        token.accessToken = user.id;
+        token.user = user;
+      }
+      return token;
+    },
+  },
 
   session: {
     // Configure your session options here.
