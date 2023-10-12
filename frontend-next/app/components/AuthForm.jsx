@@ -7,6 +7,7 @@ import {
   FormLabel,
   Button,
   Box,
+  useToast,
   Divider,
   Text,
   AbsoluteCenter,
@@ -17,9 +18,11 @@ import {
 import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import axios from "axios";
 
 const AuthForm = () => {
   const [variant, setVariant] = useState("register");
+  const toast = useToast();
   const {
     register,
     handleSubmit,
@@ -27,8 +30,37 @@ const AuthForm = () => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm();
-  const formSubmit = (data) => {
-    console.log(data);
+  const formSubmit = ({ username, email, password }) => {
+    axios
+      .post(`http://localhost:5000/api/${variant}`, {
+        username,
+        email,
+        password,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          toast({
+            title: `Success`,
+            description: `${res.data.message}`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+        //if something goes wrong
+        else {
+          toast({
+            title: `Something went wrong`,
+            description: `Please try again later`,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <Card width={"40%"}>
