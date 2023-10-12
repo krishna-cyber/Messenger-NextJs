@@ -20,7 +20,6 @@ import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
-import { sign } from "crypto";
 import { signIn } from "next-auth/react";
 
 const AuthForm = () => {
@@ -74,7 +73,8 @@ const AuthForm = () => {
             position: "top-right",
           }); //toast error
         });
-    } else {
+    }
+    if (variant === "login") {
       signIn("credentials", {
         email,
         password,
