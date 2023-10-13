@@ -4,6 +4,7 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import axios from "axios";
 
 const handler = NextAuth({
   // Configure one or more authentication providers
@@ -29,7 +30,14 @@ const handler = NextAuth({
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
         const { email, password } = credentials;
-        const user = { email, password, address: "Mahendranagar" };
+        const response = await axios.post("http://localhost:5000/api/login", {
+          email,
+          password,
+        });
+
+        if (response.status === 200) {
+          return response.data.user;
+        }
 
         if (user) {
           return user;

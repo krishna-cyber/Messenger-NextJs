@@ -21,6 +21,7 @@ const userSchema = new Schema(
     },
     avatar: {
       type: String,
+      default: "https://i.imgur.com/6VBx3io.png",
     },
     contacts: [
       {

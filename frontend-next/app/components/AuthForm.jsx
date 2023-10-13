@@ -49,6 +49,12 @@ const AuthForm = () => {
               status: "success",
               duration: 3000,
               isClosable: true,
+              position: "top-right",
+            });
+            signIn("credentials", {
+              email,
+              password,
+              callbackUrl: "http://localhost:3000/chat",
             });
           }
           //if something goes wrong

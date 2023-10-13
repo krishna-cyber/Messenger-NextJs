@@ -7,7 +7,7 @@ const router = express.Router();
 //importing register controller
 const {
   registerUser,
-  getUser,
+  authenticate,
 } = require("./controllers/userController/userController");
 
 //getuser data for login and others
@@ -16,7 +16,7 @@ const {
 
 router.post("/register", registerUser);
 
-//get user information
-router.post("/getUser", getUser);
+//login authentication
+router.post("/login", authenticate);
 
 module.exports = router;

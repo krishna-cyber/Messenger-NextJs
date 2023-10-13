@@ -32,7 +32,7 @@ const registerUser = async (req, res) => {
 };
 
 //getuser information for login and others
-const getUser = async (req, res) => {
+const authenticate = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -62,4 +62,4 @@ const getUser = async (req, res) => {
     },
   });
 };
-module.exports = { registerUser, getUser };
+module.exports = { registerUser, authenticate };
