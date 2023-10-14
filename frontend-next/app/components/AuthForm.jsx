@@ -17,14 +17,20 @@ import {
 } from "@chakra-ui/react";
 
 import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 const AuthForm = () => {
   const [variant, setVariant] = useState("register");
+  const { status } = useSession();
   const toast = useToast();
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/chat");
+    }
+  }, [status]);
   const {
     register,
     handleSubmit,
