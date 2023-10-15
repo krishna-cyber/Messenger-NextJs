@@ -1,6 +1,14 @@
 /** @format */
 "use client";
-import { Button, Divider, IconButton, VStack } from "@chakra-ui/react";
+import {
+  Avatar,
+  AvatarBadge,
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  VStack,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import {
   BsChatDots,
@@ -20,48 +28,63 @@ const HambergerMenu = () => {
   const [active, setActive] = useState("1");
   return (
     <VStack
-      width={expand == true ? "20%" : "5%"}
-      alignItems={"flex-start"}
-      padding={"2"}
-      gap={"6"}>
-      <IconButton
-        icon={<FcMenu />}
-        aria-label='menu'
-        onClick={() => {
-          setExpand(!expand);
-        }}
-      />
-      <Divider />
-      <Button
-        size={"lg"}
-        color={"gray.700"}
-        leftIcon={active == "1" ? <BsChatDotsFill /> : <BsChatDots />}
-        variant={active == 1 ? "solid" : "ghost"}
-        onClick={() => {
-          setActive("1");
-        }}>
-        {expand == true ? "Messages" : ""}
-      </Button>
-      <Button
-        size={"lg"}
-        color={"gray.700"}
-        leftIcon={active == "2" ? <BsPeopleFill /> : <BsPeople />}
-        variant={active == 2 ? "solid" : "ghost"}
-        onClick={() => {
-          setActive("2");
-        }}>
-        {expand == true ? "Contacts" : ""}
-      </Button>
-      <Button
-        size={"lg"}
-        color={"gray.700"}
-        leftIcon={<BiLogOut />}
-        variant={active == 3 ? "solid" : "ghost"}
-        onClick={() => {
-          setActive("3");
-        }}>
-        {expand == true ? "Logout" : ""}
-      </Button>
+      width={expand == true ? "20%" : "7%"}
+      justifyContent={"space-between"}
+      padding={"2"}>
+      <Box
+        alignSelf={"flex-start"}
+        display={"flex"}
+        flexDirection={"column"}
+        gap={"6"}
+        alignItems={"flex-start"}>
+        {" "}
+        <IconButton
+          icon={<FcMenu />}
+          aria-label='menu'
+          onClick={() => {
+            setExpand(!expand);
+          }}
+        />
+        <Divider />
+        <Button
+          size={"lg"}
+          color={"gray.700"}
+          leftIcon={active == "1" ? <BsChatDotsFill /> : <BsChatDots />}
+          variant={active == 1 ? "solid" : "ghost"}
+          onClick={() => {
+            setActive("1");
+          }}>
+          {expand == true ? "Messages" : ""}
+        </Button>
+        <Button
+          size={"lg"}
+          color={"gray.700"}
+          leftIcon={active == "2" ? <BsPeopleFill /> : <BsPeople />}
+          variant={active == 2 ? "solid" : "ghost"}
+          onClick={() => {
+            setActive("2");
+          }}>
+          {expand == true ? "Contacts" : ""}
+        </Button>
+        <Button
+          size={"lg"}
+          color={"gray.700"}
+          leftIcon={<BiLogOut />}
+          variant={active == 3 ? "solid" : "ghost"}
+          onClick={() => {
+            setActive("3");
+          }}>
+          {expand == true ? "Logout" : ""}
+        </Button>
+      </Box>
+
+      <Avatar
+        colorScheme={"messenger"}
+        src='https://img.freepik.com/free-vector/head-man_1308-33466.jpg?w=740&t=st=1697368311~exp=1697368911~hmac=2827176466ed7729f2cc012c77841117fa154b80a84c59e4c00b17e28f4d29f9'
+        alignSelf={"flex-start"}
+        size={"md"}>
+        <AvatarBadge boxSize='1.2em' bg='green.500' />
+      </Avatar>
     </VStack>
   );
 };

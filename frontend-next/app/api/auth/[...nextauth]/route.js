@@ -65,6 +65,9 @@ const handler = NextAuth({
       return Promise.resolve(session);
     },
   },
+  pages: {
+    signIn: "/",
+  },
 
   session: {
     strategy: "jwt",

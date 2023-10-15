@@ -6,7 +6,7 @@ import { Box } from "@chakra-ui/react";
 
 const MessageSection = () => {
   return (
-    <Box height={"full"}>
+    <Box width={"full"}>
       <EmptySection />
     </Box>
   );

@@ -26,11 +26,7 @@ const AuthForm = () => {
   const [variant, setVariant] = useState("register");
   const { status } = useSession();
   const toast = useToast();
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.push("/chat");
-    }
-  }, [status]);
+
   const {
     register,
     handleSubmit,

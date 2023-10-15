@@ -1,10 +1,12 @@
 /** @format */
 "use client";
-import { Button } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
 import { redirect } from "next/dist/server/api-utils";
-import React from "react";
 import { useRouter } from "next/navigation";
+import HambergerMenu from "../components/HambergerMenu";
+import MessageSection from "../components/MessageSection";
+import UserContacts from "../components/UserContacts";
+import { Divider } from "@chakra-ui/react";
 
 const page = () => {
   const router = useRouter();
@@ -17,11 +19,11 @@ const page = () => {
   console.log("use session hook invoked" + { session });
   return (
     <>
-      <p>This is chat page</p>
-      <Button onClick={() => signOut()}>SignOut</Button>
-      <p>{session?.user.username}</p>
-      <p>address is {session?.user?.address}</p>
-      <p>{status}</p>
+      <HambergerMenu />
+      <Divider orientation={"vertical"} />
+      <UserContacts />
+      <Divider orientation={"vertical"} />
+      <MessageSection />
     </>
   );
 };
