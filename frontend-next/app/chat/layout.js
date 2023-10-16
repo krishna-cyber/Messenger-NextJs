@@ -1,6 +1,7 @@
 /** @format */
 
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Divider } from "@chakra-ui/react";
+import HambergerMenu from "../components/HambergerMenu";
 import React from "react";
 
 const layout = ({ children }) => {
@@ -13,6 +14,8 @@ const layout = ({ children }) => {
       justifyContent={"space-between"}
       height={"100vh"}>
       {" "}
+      <HambergerMenu />
+      <Divider orientation={"vertical"} />
       {children}
     </Box>
   );

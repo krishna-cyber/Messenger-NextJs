@@ -46,26 +46,32 @@ const HambergerMenu = () => {
           }}
         />
         <Divider />
-        <Button
-          size={"lg"}
-          color={"gray.700"}
-          leftIcon={active == "1" ? <BsChatDotsFill /> : <BsChatDots />}
-          variant={active == 1 ? "solid" : "ghost"}
-          onClick={() => {
-            setActive("1");
-          }}>
-          {expand == true ? "Messages" : ""}
-        </Button>
-        <Button
-          size={"lg"}
-          color={"gray.700"}
-          leftIcon={active == "2" ? <BsPeopleFill /> : <BsPeople />}
-          variant={active == 2 ? "solid" : "ghost"}
-          onClick={() => {
-            setActive("2");
-          }}>
-          {expand == true ? "Contacts" : ""}
-        </Button>
+        <Link href='/chat'>
+          <Button
+            size={"lg"}
+            color={"gray.700"}
+            leftIcon={active == "1" ? <BsChatDotsFill /> : <BsChatDots />}
+            variant={active == 1 ? "solid" : "ghost"}
+            onClick={() => {
+              setActive("1");
+            }}>
+            {expand == true ? "Messages" : ""}
+          </Button>
+        </Link>
+        <Divider />
+        <Link href='/chat/contacts'>
+          <Button
+            size={"lg"}
+            color={"gray.700"}
+            leftIcon={active == "2" ? <BsPeopleFill /> : <BsPeople />}
+            variant={active == 2 ? "solid" : "ghost"}
+            onClick={() => {
+              setActive("2");
+            }}>
+            {expand == true ? "Contacts" : ""}
+          </Button>
+        </Link>
+        <Divider />
         <Button
           size={"lg"}
           color={"gray.700"}
