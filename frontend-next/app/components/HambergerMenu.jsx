@@ -20,9 +20,8 @@ import { FcMenu } from "react-icons/fc";
 import { BiLogOut } from "react-icons/bi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { set } from "react-hook-form";
-
-const HambergerMenu = () => {
+import { signOut } from "next-auth/react";
+const HambergerMenu = ({ avatar }) => {
   const router = useRouter();
   const [expand, setExpand] = useState(false);
   const [active, setActive] = useState("1");
@@ -79,6 +78,7 @@ const HambergerMenu = () => {
           variant={active == 3 ? "solid" : "ghost"}
           onClick={() => {
             setActive("3");
+            signOut();
           }}>
           {expand == true ? "Logout" : ""}
         </Button>
@@ -86,7 +86,7 @@ const HambergerMenu = () => {
 
       <Avatar
         colorScheme={"messenger"}
-        src='https://img.freepik.com/free-vector/head-man_1308-33466.jpg?w=740&t=st=1697368311~exp=1697368911~hmac=2827176466ed7729f2cc012c77841117fa154b80a84c59e4c00b17e28f4d29f9'
+        src={avatar}
         alignSelf={"flex-start"}
         size={"md"}>
         <AvatarBadge boxSize='1.2em' bg='green.500' />
