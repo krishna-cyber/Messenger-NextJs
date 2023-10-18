@@ -29,6 +29,12 @@ const userSchema = new Schema(
         ref: "User",
       },
     ],
+    conversations: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Conversation",
+      },
+    ],
   },
   {
     timestamps: true,
