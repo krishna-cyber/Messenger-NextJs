@@ -62,4 +62,22 @@ const authenticate = async (req, res) => {
     },
   });
 };
-module.exports = { registerUser, authenticate };
+
+//get all user contact from database
+const getContacts = async (req, res) => {
+  const contacts = await User.find({});
+
+  //only send avatar, username and id
+  const newContacts = contacts.map((contact) => {
+    return {
+      id: contact._id,
+      username: contact.username,
+      avatar: contact.avatar,
+    };
+  });
+
+  // response with contacts details
+  res.status(200).json({ message: "Contacts fetched", contacts: newContacts });
+};
+
+module.exports = { registerUser, authenticate, getContacts };

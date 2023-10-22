@@ -8,6 +8,7 @@ const router = express.Router();
 const {
   registerUser,
   authenticate,
+  getContacts,
 } = require("./controllers/userController/userController");
 
 //getuser data for login and others
@@ -19,4 +20,6 @@ router.post("/register", registerUser);
 //login authentication
 router.post("/login", authenticate);
 
+//get all contacts
+router.get("/contacts", getContacts);
 module.exports = router;
