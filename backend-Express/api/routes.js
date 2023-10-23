@@ -11,8 +11,11 @@ const {
   getContacts,
 } = require("./controllers/userController/userController");
 
-//getuser data for login and others
-
+//importing conversation controller
+const {
+  registerConversation,
+  getConversations,
+} = require("./controllers/conversationController/conversationController");
 //registering user
 
 router.post("/register", registerUser);
@@ -22,4 +25,7 @@ router.post("/login", authenticate);
 
 //get all contacts
 router.get("/contacts", getContacts);
+
+//get all conversations
+router.post("/conversations", getConversations);
 module.exports = router;

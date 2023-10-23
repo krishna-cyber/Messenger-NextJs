@@ -10,10 +10,12 @@ import {
   Button,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 
 const UserContacts = ({ url }) => {
   const [contacts, setContacts] = useState([]);
+  const { data: session } = useSession();
 
   //fetching contacts from database
   async function fetchContacts() {
@@ -24,7 +26,12 @@ const UserContacts = ({ url }) => {
 
   //fetch conversations from database
   async function fetchConversations() {
-    const response = await axios.get("http://localhost:5000/api/conversations");
+    const response = await axios.post(
+      "http://localhost:5000/api/conversations",
+      {
+        userId: session.user.id,
+      }
+    );
     const data = await response.data;
     setContacts(data.conversations);
   }
@@ -34,8 +41,9 @@ const UserContacts = ({ url }) => {
     if (url == "contacts") {
       fetchContacts();
     } else if (url == "chat") {
-      console.log("chat");
+      fetchConversations();
     }
+    return () => {};
   }, [url]);
 
   return (
