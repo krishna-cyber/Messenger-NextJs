@@ -1,6 +1,7 @@
 /** @format */
 
 const Conversation = require("../../../models/conversationModel");
+const User = require("../../../models/userModel");
 
 //register new conversation controller function
 
@@ -32,11 +33,12 @@ const registerConversation = async (req, res) => {
 const getConversations = async (req, res) => {
   const { userId } = req.body;
 
-  //get all the conversation from database
-  const conversations = await Conversation.find({
-    members: { $in: [userId] },
-  });
+  //get all the conversation from user  database
+  const conversations = await User.find({ email: userId }).populate(
+    "conversations"
+  );
 
+  console.log(conversations);
   // returning conversation with conversation id and members
   res.status(200).json({
     message: "Conversations fetched successfully",
