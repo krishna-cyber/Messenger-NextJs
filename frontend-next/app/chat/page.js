@@ -10,7 +10,7 @@ const page = () => {
     <>
       <UserContacts url={"chat"} />
       <Divider orientation={"vertical"} />
-      <MessageSection />
+      <MessageSection conversationId={null} />
       {/* <Footer /> */}
     </>
   );

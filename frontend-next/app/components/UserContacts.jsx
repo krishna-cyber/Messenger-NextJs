@@ -12,6 +12,7 @@ import {
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import conversationUsers from "../static/messages";
 
 const UserContacts = ({ url }) => {
   const [contacts, setContacts] = useState([]);
@@ -26,14 +27,8 @@ const UserContacts = ({ url }) => {
 
   //fetch conversations from database
   async function fetchConversations() {
-    const response = await axios.post(
-      "http://localhost:5000/api/conversations",
-      {
-        userId: session.user.id,
-      }
-    );
-    const data = await response.data;
-    setContacts(data.conversations);
+    const conversations = conversationUsers;
+    setContacts(conversations);
   }
 
   useEffect(() => {
